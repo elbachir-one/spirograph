@@ -12,7 +12,6 @@ sf::Color getNextColor(int iteration) {
 void drawSpirograph(sf::RenderWindow& window, float R, float r, float a, float offsetX, float offsetY, int steps, float angleOffset, float thickness, float lengthFactor) {
     sf::VertexArray lines(sf::LineStrip, steps);
 
-    // Line extension for thickness
     sf::VertexArray thickLines(sf::LinesStrip, steps * 2);
 
     for (int i = 0; i < steps; ++i) {
@@ -20,12 +19,10 @@ void drawSpirograph(sf::RenderWindow& window, float R, float r, float a, float o
         float x = (R - r) * cos(t) + a * cos((R - r) * t / r);
         float y = (R - r) * sin(t) - a * sin((R - r) * t / r);
 
-        // Apply scaling and center the pattern in the window
         sf::Vector2f position(window.getSize().x / 2 + x * 100 + offsetX, window.getSize().y / 2 + y * 100 + offsetY);
 
         lines[i] = sf::Vertex(position, getNextColor(i));
 
-        // Extend the lines for thickness
         sf::Vector2f direction = (i > 0) ? (position - thickLines[i - 1].position) : sf::Vector2f(0, 0);
         sf::Vector2f normal(-direction.y, direction.x);
         float length = std::sqrt(normal.x * normal.x + normal.y * normal.y);
@@ -33,7 +30,6 @@ void drawSpirograph(sf::RenderWindow& window, float R, float r, float a, float o
             normal /= length;
         }
 
-        // Create two parallel lines for thickness
         thickLines[i * 2] = sf::Vertex(position + normal * (thickness * lengthFactor), getNextColor(i));
         thickLines[i * 2 + 1] = sf::Vertex(position - normal * (thickness * lengthFactor), getNextColor(i));
     }
@@ -42,29 +38,25 @@ void drawSpirograph(sf::RenderWindow& window, float R, float r, float a, float o
 }
 
 int main() {
-    // Initialize window with initial dimensions from config.hpp
     sf::RenderWindow window(sf::VideoMode(INITIAL_WINDOW_WIDTH, INITIAL_WINDOW_HEIGHT), "Spirograph");
     window.setFramerateLimit(60);
 
-    // Parameters for the first spirograph
     float R1 = 5, r1 = 3, a1 = 2;
-    float offsetX1 = -100, offsetY1 = -100; // Offset for positioning the first spirograph
-    // Parameters for the second spirograph
+    float offsetX1 = -100, offsetY1 = -100;
     float R2 = 7, r2 = 4, a2 = 3;
-    float offsetX2 = 100, offsetY2 = 100; // Offset for positioning the second spirograph
+    float offsetX2 = 100, offsetY2 = 100;
 
     float angleOffset = 0.0f;
-    float speed = INITIAL_SPEED;  // Initial speed of the spirograph
-    float thickness = INITIAL_THICKNESS;  // Initial line thickness
-    float lengthFactor = INITIAL_LENGTH_FACTOR;  // Initial length factor for line extension
+    float speed = INITIAL_SPEED;
+    float thickness = INITIAL_THICKNESS;
+    float lengthFactor = INITIAL_LENGTH_FACTOR;
 
-    // Variables to store current dimensions
     int windowWidth = INITIAL_WINDOW_WIDTH;
     int windowHeight = INITIAL_WINDOW_HEIGHT;
-    const int resizeAmount = 20;  // Amount to change window size by
-    const float speedChangeAmount = 0.001f;  // Amount to change speed by
-    const float thicknessChangeAmount = 0.5f;  // Amount to change line thickness by
-    const float lengthChangeAmount = 0.1f;  // Amount to change line length factor by
+    const int resizeAmount = 20;
+    const float speedChangeAmount = 0.001f;
+    const float thicknessChangeAmount = 0.5f;
+    const float lengthChangeAmount = 0.1f;
 
     while (window.isOpen()) {
         sf::Event event;
@@ -95,7 +87,6 @@ int main() {
                 else if (event.key.code == KEY_DECREASE_LENGTH && lengthFactor > lengthChangeAmount)
                     lengthFactor -= lengthChangeAmount;
 
-                // Update window size
                 window.setSize(sf::Vector2u(windowWidth, windowHeight));
             }
         }
@@ -105,7 +96,7 @@ int main() {
         drawSpirograph(window, R2, r2, a2, offsetX2, offsetY2, 1000, angleOffset, thickness, lengthFactor);
         window.display();
 
-        angleOffset += speed;  // Use the current speed
+        angleOffset += speed;
     }
 
     return 0;
