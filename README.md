@@ -19,6 +19,8 @@ A simple spirograph drawing application using SFML. This program generates and d
 
 1. **Install SFML**: Follow instructions on [SFML's official website](https://www.sfml-dev.org/download.php) to install SFML.
 
+NOTE: Use your package manager to install SFML.
+
 2. **Compile the Application**:
 
     ```bash
